@@ -1,6 +1,6 @@
 {
-    "name": "dmoen/super-simple-xml",
-    "description": "Package for creating a simple xml file",
+    "name": "dmoen/super-simple-excel",
+    "description": "Package for creating a simple Excel file",
     "type": "libary",
     "license": "MIT",
     "authors": [
