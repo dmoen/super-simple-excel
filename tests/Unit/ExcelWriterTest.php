@@ -108,7 +108,9 @@ class ExcelWriterTest extends TestCase
                 "size" => 14
             ], 1)
             ->addContent(
-                ["Dolore", "Ipsum", "Amet", "Sit"],
+                [
+                    ["Dolore", "Ipsum", "Amet", "Sit"]
+                ],
                 [
                     "align" => "right",
                     "bold"  => false,
