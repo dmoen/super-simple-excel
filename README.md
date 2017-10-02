@@ -1,6 +1,6 @@
 # Super simple excel
 
-Simple package for creating an Excel file from arrays when you dont need advanced configuration on cell level.
+Simple package for creating an Excel file from arrays, traversable objects or Eloquent Collections when you dont need advanced configuration on cell level.
 
 ## Installation
 
