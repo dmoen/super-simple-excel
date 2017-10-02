@@ -2,6 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 use Dmoen\SuperSimpleExcel\ExcelWriter;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+
+class TestModel extends Model{
+    protected $guarded = [];
+};
 
 class ExcelWriterTest extends TestCase
 {
@@ -163,8 +169,6 @@ class ExcelWriterTest extends TestCase
             ["Dolore", "Ipsum", "Amet", "Sit"]
         ], $generatedFile);
     }
-<<<<<<< Updated upstream
-=======
 
     public function test_it_works_with_nested_collections()
     {
@@ -240,5 +244,4 @@ class ExcelWriterTest extends TestCase
             ["George", "User", 'Gothenburg', "Volvo"]
         ], $generatedFile);
     }
->>>>>>> Stashed changes
 }
