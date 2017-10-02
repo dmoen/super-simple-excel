@@ -1,4 +1,4 @@
 /vendor
 /.idea
 node_modules/
-tests/excel-sample/
+/tests/excel-sample

@@ -6,9 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class TestModel extends Model{
-
     protected $guarded = [];
-
 };
 
 class ExcelWriterTest extends TestCase
@@ -171,6 +169,50 @@ class ExcelWriterTest extends TestCase
         $this->assertSame([
             ["Lorem", "Ipsum", "Sit", "Amet"],
             ["Dolore", "Ipsum", "Amet", "Sit"]
+        ], $generatedFile);
+    }
+
+    public function test_it_works_with_nested_collections()
+    {
+        $collection = new class implements Iterator {
+
+            private $var1 = ["Lorem", "Ipsum", "Sit", "Amet"];
+
+            private $key = 0;
+
+            public function current()
+            {
+                return $this->var1[$this->key];
+            }
+
+            public function next()
+            {
+                return $this->var1[$this->key++];
+            }
+
+            public function key()
+            {
+                return $this->key;
+            }
+
+            public function valid()
+            {
+                return $this->key < 4;
+            }
+
+            public function rewind(){}
+        };
+
+        $writer = new ExcelWriter();
+
+        $writer->addContent([$collection, clone $collection])
+            ->save($this->samplePath);
+
+        $generatedFile = $this->readExcel($this->samplePath);
+
+        $this->assertSame([
+            ["Lorem", "Ipsum", "Sit", "Amet"],
+            ["Lorem", "Ipsum", "Sit", "Amet"]
         ], $generatedFile);
     }
 
