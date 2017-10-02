@@ -31,7 +31,7 @@ class ExcelWriterTest extends TestCase
     {
         $writer = new ExcelWriter();
 
-        $writer->setHeadings(["Lorem", "Ipsum", "Sit", "Amet"], null, 2);
+        $writer->setHeadings(["Lorem", "Ipsum", "Sit", "Amet"], [], 2);
         $writer->save($this->samplePath);
 
         $generatedFile = $this->readExcel($this->samplePath);
@@ -116,6 +116,50 @@ class ExcelWriterTest extends TestCase
         $this->assertSame([
             ["Lorem", "Ipsum", "Sit", "Amet"],
             [null, null, null, null],
+            ["Dolore", "Ipsum", "Amet", "Sit"]
+        ], $generatedFile);
+    }
+
+    public function test_it_works_with_collections()
+    {
+        $collection = new class implements Iterator {
+
+            private $var1 = [["Lorem", "Ipsum", "Sit", "Amet"], ["Dolore", "Ipsum", "Amet", "Sit"]];
+
+            private $key = 0;
+
+            public function current()
+            {
+                return $this->var1[$this->key];
+            }
+
+            public function next()
+            {
+                return $this->var1[$this->key++];
+            }
+
+            public function key()
+            {
+                return $this->key;
+            }
+
+            public function valid()
+            {
+                return $this->key < 2;
+            }
+
+            public function rewind(){}
+        };
+
+        $writer = new ExcelWriter();
+
+        $writer->addContent($collection)
+            ->save($this->samplePath);
+
+        $generatedFile = $this->readExcel($this->samplePath);
+
+        $this->assertSame([
+            ["Lorem", "Ipsum", "Sit", "Amet"],
             ["Dolore", "Ipsum", "Amet", "Sit"]
         ], $generatedFile);
     }
