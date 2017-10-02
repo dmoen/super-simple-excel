@@ -60,8 +60,10 @@ class ExcelWriter extends \PHPExcel
         return $r;
     }
 
-    public function setHeadings(Array $headings, $styles = ["bold" => true], $rowSpacing = 0)
+    public function setHeadings(Array $headings, $styles = [], $rowSpacing = 0)
     {
+        $styles = ($styles) ? $styles : ["bold" => true];
+
         foreach(array_values($headings) as $index => $heading){
             $cell = $this->numToAlpha($index).$this->currentRow;
             $this->setCell($cell, $heading);
@@ -111,7 +113,7 @@ class ExcelWriter extends \PHPExcel
             $rowContent->toArray() : $rowContent;
         $colNr = 0;
 
-        foreach($rowContent as $index => $cellValue) {
+        foreach(array_values($rowContent) as $index => $cellValue) {
             $cell = $this->numToAlpha($index).$rowNr;
             $this->setCell($cell, $cellValue);
             $this->setCellStyles($cell, $styles);

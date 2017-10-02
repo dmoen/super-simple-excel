@@ -2,6 +2,14 @@
 
 use PHPUnit\Framework\TestCase;
 use Dmoen\SuperSimpleExcel\ExcelWriter;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+
+class TestModel extends Model{
+
+    protected $guarded = [];
+
+};
 
 class ExcelWriterTest extends TestCase
 {
@@ -102,7 +110,9 @@ class ExcelWriterTest extends TestCase
                 "size" => 14
             ], 1)
             ->addContent(
-                ["Dolore", "Ipsum", "Amet", "Sit"],
+                [
+                    ["Dolore", "Ipsum", "Amet", "Sit"]
+                ],
                 [
                     "align" => "right",
                     "bold"  => false,
@@ -161,6 +171,37 @@ class ExcelWriterTest extends TestCase
         $this->assertSame([
             ["Lorem", "Ipsum", "Sit", "Amet"],
             ["Dolore", "Ipsum", "Amet", "Sit"]
+        ], $generatedFile);
+    }
+
+    public function test_it_works_with_laravel_collections_with_models()
+    {
+        $model1 = new TestModel([
+            "user" => "Bill",
+            "role" => "Admin",
+            "city" => 'Stockholm',
+            "car" => "Audi"
+        ]);
+
+        $model2 = new TestModel([
+            "use2" => "George",
+            "role" => "User",
+            "city" => 'Gothenburg',
+            "car" => "Volvo"
+        ]);
+
+        $collection = new Collection([$model1, $model2]);
+
+        $writer = new ExcelWriter();
+
+        $writer->addContent($collection)
+            ->save($this->samplePath);
+
+        $generatedFile = $this->readExcel($this->samplePath);
+
+        $this->assertSame([
+            ["Bill", "Admin", 'Stockholm', "Audi"],
+            ["George", "User", 'Gothenburg', "Volvo"]
         ], $generatedFile);
     }
 }
