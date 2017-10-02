@@ -60,7 +60,7 @@ class ExcelWriter extends \PHPExcel
         return $r;
     }
 
-    public function setHeadings(Array $headings, $styles = null, $rowSpacing = 0)
+    public function setHeadings(Array $headings, $styles = ["bold" => true], $rowSpacing = 0)
     {
         foreach(array_values($headings) as $index => $heading){
             $cell = $this->numToAlpha($index).$this->currentRow;
@@ -89,36 +89,39 @@ class ExcelWriter extends \PHPExcel
         return $this;
     }
 
-    public function addContent(Array $content, $styles = null)
+    public function addContent($content, $styles = [])
     {
-        if(is_array($content[0])){
-            foreach($content as $content){
-                $this->setRowContent($this->currentRow++, $content, $styles);
+        if(is_array($content) || $content instanceof \Traversable){
+            foreach($content as $index => $rowContent){
+                if($index == 0 && !is_array($rowContent) && !$content instanceof \Traversable){
+                    $this->setRowContent($this->currentRow++, $content, $styles);
+                    return $this;
+                }
+
+                $this->setRowContent($this->currentRow++, $rowContent, $styles);
             }
-
-            return $this;
         }
-
-        $this->setRowContent($this->currentRow++, $content, $styles);
 
         return $this;
     }
 
     private function setRowContent($rowNr, $rowContent, $styles)
     {
-        foreach(array_values($rowContent) as $index => $cellValue) {
+        $rowContent = method_exists($rowContent,'toArray') ?
+            $rowContent->toArray() : $rowContent;
+        $colNr = 0;
+
+        foreach($rowContent as $index => $cellValue) {
             $cell = $this->numToAlpha($index).$rowNr;
             $this->setCell($cell, $cellValue);
             $this->setCellStyles($cell, $styles);
+
+            $colNr++;
         }
     }
 
-    private function setCellStyles($cell, Array $styles = null)
+    private function setCellStyles($cell, $styles)
     {
-        if(!$styles){
-            return;
-        }
-
         $styles = array_merge(
             $this->sheetOptions, $styles
         );
