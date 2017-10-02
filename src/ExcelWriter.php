@@ -93,7 +93,7 @@ class ExcelWriter extends \PHPExcel
     {
         if(is_array($content) || $content instanceof \Traversable){
             foreach($content as $index => $rowContent){
-                if($index == 0 && !is_array($rowContent) && !$content instanceof \Traversable){
+                if($index == 0 && !is_array($rowContent) && !$rowContent instanceof \Traversable && !$content instanceof \Traversable){
                     $this->setRowContent($this->currentRow++, $content, $styles);
                     return $this;
                 }
@@ -109,10 +109,11 @@ class ExcelWriter extends \PHPExcel
     {
         $rowContent = method_exists($rowContent,'toArray') ?
             $rowContent->toArray() : $rowContent;
+
         $colNr = 0;
 
-        foreach($rowContent as $index => $cellValue) {
-            $cell = $this->numToAlpha($index).$rowNr;
+        foreach($rowContent as $cellValue) {
+            $cell = $this->numToAlpha($colNr).$rowNr;
             $this->setCell($cell, $cellValue);
             $this->setCellStyles($cell, $styles);
 
