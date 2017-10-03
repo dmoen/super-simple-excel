@@ -42,7 +42,7 @@ $writer = ExcelWriter::create()
 $writer->addContent(["Row1", "Row1", "Row1", "Row1"]); 
     
 $writer->addContent(["Row2", "Row2", "Row2", "Row2"])
-    ->output("filepath");    
+    ->output("filename");    
 ```
 
 Multi dimensional array
@@ -63,7 +63,7 @@ Default styles can be set for font weight, font size, font type and alignment
 ExcelWriter::create(["bold" => true, "font" => "Arial", "size" => 20, "align" => "center"]);    
 ```
 
-Styles can also be set for headings or a specific row
+Styles can also be set for headings or specific row(s)
 
 ```php
 $writer = ExcelWriter::create();
