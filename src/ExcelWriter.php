@@ -17,6 +17,8 @@ class ExcelWriter extends \PHPExcel
     {
         parent::__construct();
 
+        \PHPExcel_Settings::setZipClass(\PHPExcel_settings::PCLZIP);
+
         if($sheetOptions){
             $this->sheetOptions = array_merge(
                 $this->sheetOptions, $sheetOptions
